@@ -49,3 +49,11 @@ def calc_annual_volatility(strategy_returns):
         return 0
     std=np.std(strategy_returns)
     return std*np.sqrt(252)
+def calc_excess_returns(strategy_returns,benchmark_returns):
+    if len(strategy_returns)!=len(benchmark_returns):
+        raise ValueError("strategy_returns和benchmark_returns长度必须一致")
+    excess_returns=[]
+    for strategy_return,benchmark_return in zip(strategy_returns,benchmark_returns):
+      excess_return=strategy_return-benchmark_return
+      excess_returns.append(excess_return)
+    return excess_returns
