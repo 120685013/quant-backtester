@@ -57,3 +57,26 @@ def calc_excess_returns(strategy_returns,benchmark_returns):
       excess_return=strategy_return-benchmark_return
       excess_returns.append(excess_return)
     return excess_returns
+def calc_information_ratio(excess_returns,periods_per_year=252,min_sample=20):
+    if not isinstance(periods_per_year, (int, float)):
+        raise TypeError("periods_per_year must be int or float")
+    if periods_per_year <= 0:
+        raise ValueError("periods_per_year must be greater than 0")
+    if not isinstance(min_sample, (int)):
+        raise TypeError("min_sample must be int")
+    if min_sample <= 0:
+        raise ValueError("min_sample must be greater than 0")
+    if min_sample > len(excess_returns):
+        return None
+    mean=np.mean(excess_returns)
+    std=np.std(excess_returns)
+    if np.isclose(std, 0):
+        if mean>0:
+            return float('inf')
+        elif mean<0:
+            return float('-inf')
+        else:
+            return 0
+    information_ratio=mean/std*np.sqrt(periods_per_year)
+    return information_ratio
+

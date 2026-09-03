@@ -1,7 +1,7 @@
 from indicators import calc_returns
 from strategy import strategy
 from backtest import run_backtest
-from metrics import calc_sharpe,max_drawdown,calc_annual_return,calc_annual_volatility,calc_total_return,calc_excess_returns
+from metrics import calc_sharpe,max_drawdown,calc_annual_return,calc_annual_volatility,calc_total_return,calc_excess_returns,calc_information_ratio
 
 def run_strategy(prices,initial_money=10000,fee_rate=0.0,benchmark_prices=None):
     signals=strategy(prices)
@@ -12,9 +12,11 @@ def run_strategy(prices,initial_money=10000,fee_rate=0.0,benchmark_prices=None):
     excess_returns=None
     benchmark_total_return = None
     excess_total_return = None
+    information_ratio=None
     if benchmark_prices is not None:
         benchmark_returns=calc_returns(benchmark_prices)
         excess_returns=calc_excess_returns(strategy_returns,benchmark_returns)
+        information_ratio=calc_information_ratio(excess_returns)
         benchmark_total_return=calc_total_return(benchmark_prices)
         excess_total_return=total_return-benchmark_total_return
     sharpe=calc_sharpe(strategy_returns)
@@ -29,6 +31,7 @@ def run_strategy(prices,initial_money=10000,fee_rate=0.0,benchmark_prices=None):
         "strategy_returns": strategy_returns,
         "benchmark_returns": benchmark_returns,
         "excess_returns": excess_returns,
+        "information_ratio": information_ratio,
         "benchmark_total_return": benchmark_total_return,
         "excess_total_return": excess_total_return,
         "sharpe": sharpe,
@@ -50,6 +53,7 @@ if __name__ == "__main__":
     print('strategy returns',report["strategy_returns"])
     print('benchmark returns', report["benchmark_returns"])
     print('excess returns', report["excess_returns"])
+    print('information ratio', report["information_ratio"])
     print('benchmark total returns', report["benchmark_total_return"])
     print('excess total returns', report["excess_total_return"])
     print('history',report["portfolio"].equity_history)
