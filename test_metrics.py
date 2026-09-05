@@ -22,3 +22,20 @@ print("too few samples:", calc_information_ratio(short_returns))
 stable_returns = [0.01] * 20
 
 print("zero std:", calc_information_ratio(stable_returns))
+
+from metrics import calc_downside_deviation, calc_sortino_ratio
+
+
+# downside deviation 正常情况
+returns = [0.02, -0.01, 0.03, -0.02]
+print("downside deviation:", calc_downside_deviation(returns))
+
+# Sortino 正常情况
+print("sortino:", calc_sortino_ratio(returns))
+
+# 全部高于 target，downside deviation 理论上为 0
+positive_returns = [0.01, 0.02, 0.03, 0.04]
+print("sortino no downside:", calc_sortino_ratio(positive_returns))
+
+# 空列表
+print("sortino empty:", calc_sortino_ratio([]))

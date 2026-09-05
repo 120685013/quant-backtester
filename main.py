@@ -1,7 +1,7 @@
 from indicators import calc_returns
 from strategy import strategy
 from backtest import run_backtest
-from metrics import calc_sharpe,max_drawdown,calc_annual_return,calc_annual_volatility,calc_total_return,calc_excess_returns,calc_information_ratio
+from metrics import calc_sharpe,max_drawdown,calc_annual_return,calc_annual_volatility,calc_total_return,calc_excess_returns,calc_information_ratio,calc_sortino_ratio
 
 def run_strategy(prices,initial_money=10000,fee_rate=0.0,benchmark_prices=None):
     signals=strategy(prices)
@@ -13,6 +13,7 @@ def run_strategy(prices,initial_money=10000,fee_rate=0.0,benchmark_prices=None):
     benchmark_total_return = None
     excess_total_return = None
     information_ratio=None
+    sortino=calc_sortino_ratio(strategy_returns)
     if benchmark_prices is not None:
         benchmark_returns=calc_returns(benchmark_prices)
         excess_returns=calc_excess_returns(strategy_returns,benchmark_returns)
@@ -41,6 +42,7 @@ def run_strategy(prices,initial_money=10000,fee_rate=0.0,benchmark_prices=None):
         "annual_return": annual_return,
         "annual_volatility": annual_volatility,
         "total_return": total_return,
+        "sortino": sortino
     }
     return report
 if __name__ == "__main__":
@@ -65,5 +67,6 @@ if __name__ == "__main__":
     print('max drawdown', report["max_drawdown"])
     print('drawdown start', report["drawdown_start"])
     print('drawdown end', report["drawdown_end"])
+    print('sortino', report["sortino"])
 
 

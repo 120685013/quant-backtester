@@ -79,4 +79,28 @@ def calc_information_ratio(excess_returns,periods_per_year=252,min_sample=20):
             return 0
     information_ratio=mean/std*np.sqrt(periods_per_year)
     return information_ratio
-
+def calc_downside_deviation(returns,target_return=0):
+    downside_returns=[]
+    for r in returns:
+        if r>target_return:
+          downside_returns.append(0)
+        else:
+          downside_returns.append(r-target_return)
+    downside_deviation = np.sqrt(np.mean(np.square(downside_returns)))
+    return downside_deviation
+def calc_sortino_ratio(returns,target_return=0,periods_per_year=252):
+    if not isinstance(periods_per_year, (int, float)):
+        raise TypeError("periods_per_year must be int or float")
+    if periods_per_year <= 0:
+        raise ValueError("periods_per_year must be greater than 0")
+    if len(returns) == 0:
+        return 0
+    downside_deviation=calc_downside_deviation(returns,target_return)
+    mean=np.mean(returns)
+    if np.isclose(downside_deviation,0):
+        if mean>target_return:
+            return float('inf')
+        else:
+            return 0
+    sortino_ratio=(mean-target_return)/downside_deviation*np.sqrt(periods_per_year)
+    return sortino_ratio
